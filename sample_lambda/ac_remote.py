@@ -1,6 +1,10 @@
+import logging
 import os
 import boto3
 import json
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 class AcRemote:
     def __init__(self):
@@ -10,6 +14,7 @@ class AcRemote:
         response = self.client.get_thing_shadow(thingName = self.thingName)
         streamingBody = response["payload"]
         shadow_data = json.loads(streamingBody.read())
+        logger.info(shadow_data)
         self.power = shadow_data["state"]["desired"]["power"]
         self.temp = shadow_data["state"]["desired"]["temp"]
         self.mode = shadow_data["state"]["desired"]["mode"]
