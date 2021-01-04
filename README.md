@@ -9,3 +9,6 @@
 - https://developer.amazon.com/ja-JP/docs/alexa/smarthome/build-smart-home-skills-for-hvac-devices.html
 - https://developer.amazon.com/ja/blogs/post/tx3cx1etrzz2npc/alexa-account-linking-5-steps-to-seamlessly-link-your-alexa-skill-with-login-wit
 - https://github.com/alexa/alexa-smarthome
+
+- https://recipe.kc-cloud.jp/archives/10420
+- https://dev.classmethod.jp/articles/serverless-first-lambda/
