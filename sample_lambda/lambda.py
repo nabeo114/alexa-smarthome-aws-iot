@@ -37,7 +37,8 @@ logger.setLevel(logging.INFO)
 from ac_remote import AcRemote
 ac_remote = AcRemote()
 
-from env_monitor import get_env_temperature
+from env_monitor import EnvMonitor
+env_monitor = EnvMonitor()
 
 # To simplify this sample Lambda, we omit validation of access tokens and retrieval of a specific
 # user's appliances. Instead, this array includes a variety of virtual appliances in v2 API syntax,
@@ -186,10 +187,10 @@ def handle_non_discovery_v3(request):
     if request_namespace == "Alexa.PowerController":
         if request_name == "TurnOn":
             value = "ON"
-            ac_remote.power_on()
+            ac_remote.set_power_on()
         else:
             value = "OFF"
-            ac_remote.power_off()
+            ac_remote.set_power_off()
 
         response = {
             "context": {
@@ -277,7 +278,7 @@ def handle_non_discovery_v3(request):
                         "namespace": "Alexa.TemperatureSensor",
                         "name": "temperature",
                         "value": {
-                            "value": get_env_temperature(),
+                            "value": env_monitor.get_temperature(),
                             "scale": "CELSIUS"
                         },
                         "timeOfSample": get_utc_timestamp(),
@@ -334,7 +335,7 @@ def handle_non_discovery_v3(request):
                             "namespace": "Alexa.TemperatureSensor",
                             "name": "temperature",
                             "value": {
-                                "value": get_env_temperature(),
+                                "value": env_monitor.get_temperature(),
                                 "scale": "CELSIUS"
                             },
                             "timeOfSample": get_utc_timestamp(),
