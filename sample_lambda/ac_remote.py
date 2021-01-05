@@ -11,19 +11,13 @@ class AcRemote:
         self.client = boto3.client('iot-data', region_name=os.environ['Region'])
         self.thingName = os.environ['ThingName']
         
-        response = self.client.get_thing_shadow(thingName = self.thingName)
-        streamingBody = response["payload"]
-        shadow_data = json.loads(streamingBody.read())
-        logger.info(shadow_data)
-        self.power = shadow_data["state"]["desired"]["power"]
-        self.temp = shadow_data["state"]["desired"]["temp"]
-        self.mode = shadow_data["state"]["desired"]["mode"]
+        self.update_data()
 
-    def power_on(self):
+    def set_power_on(self):
         self.client.update_thing_shadow(thingName = self.thingName, payload = '{"state":{"desired":{"power":1}}}')
         self.power = 1
 
-    def power_off(self):
+    def set_power_off(self):
         self.client.update_thing_shadow(thingName = self.thingName, payload = '{"state":{"desired":{"power":0}}}')
         self.power = 0
 
@@ -49,15 +43,18 @@ class AcRemote:
         self.mode = 3
 
     def get_power(self):
+        self.update_data()
         if self.power == 1:
             return "ON"
         else:
             return "OFF"
 
     def get_temperature(self):
+        self.update_data()
         return self.temp
 
     def get_mode(self):
+        self.update_data()
         if self.mode == 1:
             return "HEAT"
         elif self.mode == 2:
@@ -66,3 +63,12 @@ class AcRemote:
             return "COOL"
         else:
             return "COOL"
+
+    def update_data(self):
+        response = self.client.get_thing_shadow(thingName = self.thingName)
+        streamingBody = response["payload"]
+        shadow_data = json.loads(streamingBody.read())
+        logger.info(shadow_data)
+        self.power = shadow_data["state"]["desired"]["power"]
+        self.temp = shadow_data["state"]["desired"]["temp"]
+        self.mode = shadow_data["state"]["desired"]["mode"]
